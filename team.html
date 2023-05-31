@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <input type="button" id="back" value="돌아가기"><br>
+  <div id="choiceArea"></div>
+  <div id="choiceTeam"></div>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script>
+  $("#back").click(function(){
+    location.href = `http://localhost/home`
+  });
+    let list = [];
+    let div = [`<select id = "team"><option value="none"selected>=== 팀 ===</option>`];
+
+    $.ajax({
+      url: 'http://localhost/find',
+      data: {},
+      success: function (data) {
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          let teamName = data[i].team;
+              console.log(data);
+              div.push(`<option value = "${teamName}" >${teamName}</option>`)
+              }
+      div.push('</select><input type="button" id="choice" value="선택">')
+      $("#choiceArea").html(div.join(''));
+      $("#choice").click(function(){
+        let team = $("#team").val();
+        let div = [`<div>`];
+        $.ajax({
+        url : `http://localhost/team?teamName=${team}`,
+        data : {},
+        success:function(data){
+          console.log(data);
+
+          for(let i=0;i<data.length;i++) {
+             let resultdata = data[i];
+
+          div.push(`Player : ${resultdata.Player} || Reason : ${resultdata.Reason} || Potential_Reutrn : ${resultdata.Potential_Reutrn} || Status : ${resultdata.Status} || Period : ${resultdata.Period} || Injury_Date : ${resultdata.Injury_Date} || Condition  : ${resultdata.Condition}<br>`);
+        }div.push(`</div>`)
+        $("#choiceTeam").html(div.join(''));
+        }
+        })
+      });
+    }});
+
+
+  </script>
+</body>
+</html>

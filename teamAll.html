@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <input type="button" id="back" value="돌아가기"><br>
+  <div id="all"></div>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script>
+  $("#back").click(function(){
+    location.href = `http://localhost/home`
+  });
+    let list = [];
+    let div = [];
+
+    $.ajax({
+      url: 'http://localhost/find',
+      data: {},
+      success: function (data) {
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          let teamName = data[i].team;
+          $.ajax({
+            url: `http://localhost/team?teamName=${teamName}`,
+            data: {},
+            success: function (data) {
+              console.log(data);
+              div.push(`<div>${teamName}<br>`)
+              for(let i=0;i<data.length;i++) {
+                 let resultdata = data[i];
+
+              div.push(`Player : ${resultdata.Player} || Reason : ${resultdata.Reason} || Potential_Reutrn : ${resultdata.Potential_Reutrn} || Status : ${resultdata.Status} || Period : ${resultdata.Period} || Injury_Date : ${resultdata.Injury_Date} || Condition  : ${resultdata.Condition}<br>`);
+            }div.push(`</div>`)
+            $("#all").html(div.join(''));
+
+        }
+      })
+    }}});
+  </script>
+</body>
+</html>

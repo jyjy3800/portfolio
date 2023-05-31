@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+  <input type="button" id="back" value="돌아가기"><br>
+  <div id="choiceArea"></div>
+  <div id="choicePart"></div>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script>
+    $("#back").click(function(){
+      location.href = `http://localhost/home`;
+    });
+
+    let list = [];
+    let div = [`<select id="part"><option value="none" selected>=== 부위 ===</option>`];
+
+    $.ajax({
+      url: 'http://localhost/part',
+      data: {},
+      success: function (data) {
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          let part = data[i].reason;
+          console.log(part);
+          div.push(`<option value="${part}">${part}</option>`);
+        }
+        div.push('</select><input type="button" id="choice" value="선택">');
+        $("#choiceArea").html(div.join(''));
+
+        $("#choice").click(function(){
+          let reason = $("#part").val();
+          let div = [`<div>`];
+          $.ajax({
+            url : `http://localhost/partChoice?reason=${reason}`,
+            data : {},
+            success:function(data){
+              console.log(data);
+              for(let i=0; i<data.length; i++) {
+                let resultdata = data[i];
+                div.push(`Player : ${resultdata.Player} || Reason : ${resultdata.Reason} || Potential_Return : ${resultdata.Potential_Return} || Status : ${resultdata.Status} || Period : ${resultdata.Period} || Injury_Date : ${resultdata.Injury_Date} || Condition : ${resultdata.Condition}<br>`);
+              }
+              div.push(`</div>`);
+              $("#choicePart").html(div.join(''));
+            }
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

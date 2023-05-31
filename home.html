@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>EPL Team's injury</title>
+  </head>
+  <body>
+    <input type="findTitle" name="" value="">
+    <input type="button" id="reload" value="최신데이터 받아오기">
+    <div id="printWaiting">
+    </div>
+    <input type="button" id="printAll" value="전체보기"><br>
+    <input type="button" id="printTeam" value="팀별보기"><br>
+    <input type="button" id="printPart" value="부상별보기">
+  </body>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script>
+    let word = ["기", "다", "려", "주", "세", "요", ".", ".", "."];
+    let num = 0;
+    let result = "";
+
+    $("#reload").click(function(){
+      i = setInterval(function(){
+        console.log(result);
+        if (num === word.length) {
+          num = 0;
+        }
+        result = result + word[num];
+        $("#printWaiting").html(result);
+        num++;
+      }, 400);
+
+      $.ajax({
+        url: `http://localhost/test3`,
+        data: {},
+        success: function(data) {
+          const date = new Date();
+          console.log(data);
+          $("#printWaiting").html(date.toString() + data.toString());
+          clearInterval(i);
+        }
+      });
+    });
+
+    $("#printAll").click(function(){
+      location.href = `http://localhost/teamAll`;
+    });
+
+    $("#printTeam").click(function(){
+      location.href = `http://localhost/teamSeperate`;
+    });
+
+    $("#printPart").click(function(){
+      location.href = `http://localhost/injuryPart`;
+    });
+  </script>
+</html>
